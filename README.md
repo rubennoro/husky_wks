@@ -10,7 +10,7 @@ Open several terminal tabs, and source your workspace in each of them.
 3. Run: rviz2
 4. Run: ros2 run husky_planner build_env_node
 5. Run: ros2 run husky_planner path_planner
-6. 
+   
 build_env_node is a publishing node that publishes the environment migrated from the Matlab code to Rviz2.
 
 path_planner is the publishing node that runs path planning and publishes the connections between waypoints around the given environment obstacles.
