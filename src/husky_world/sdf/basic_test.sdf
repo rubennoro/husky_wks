@@ -1,0 +1,180 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="matlab_env">
+
+    <!-- Include ground and sun -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- WALL_2 -->
+    <model name="wall_2">
+      <static>true</static>
+      <pose>3.5 2.5 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 5 0.5</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 5 0.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_3 -->
+    <model name="wall_3">
+      <static>true</static>
+      <pose>5.5 3.5 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_4A -->
+    <model name="wall_4a">
+      <static>true</static>
+      <pose>1.5 0.5 0.375 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_4B -->
+    <model name="wall_4b">
+      <static>true</static>
+      <pose>1.5 2.5 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_5 -->
+    <model name="wall_5">
+      <static>true</static>
+      <pose>1.5 4.5 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_6 -->
+    <model name="wall_6">
+      <static>true</static>
+      <pose>7.5 0.5 0.375 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_7 -->
+    <model name="wall_7">
+      <static>true</static>
+      <pose>7.5 2.5 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_8 -->
+    <model name="wall_8">
+      <static>true</static>
+      <pose>7.5 4.5 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_9 -->
+    <model name="wall_9">
+      <static>true</static>
+      <pose>1.5 0.5 0.375 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 0.75</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- WALL_10 -->
+    <model name="wall_10">
+      <static>true</static>
+      <pose>5.5 1.5 0.5 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>1 1 1</size></box></geometry>
+          <material><ambient>0.8 0.2 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>1 1 1</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- GOAL PLATFORM -->
+    <model name="goal_platform">
+      <static>true</static>
+      <pose>9 4 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>2 2 0.5</size></box></geometry>
+          <material><ambient>0.2 0.8 0.2 1</ambient></material>
+        </visual>
+        <collision name="collision">
+          <geometry><box><size>2 2 0.5</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+  </world>
+</sdf>
+
