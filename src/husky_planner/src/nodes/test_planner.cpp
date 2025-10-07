@@ -2,6 +2,9 @@
 #include "visualization_msgs/msg/marker.hpp"
 #include "husky_planner/planner.h"
 
+/**
+ * TODO(): Add all generated nodes to visualize the path chosen with greater context.
+ */
 class PathPlannerNode1 : public rclcpp::Node
 {
 public:
