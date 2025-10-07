@@ -20,8 +20,17 @@ private:
 
 public:
 
+    /**
+     * Executes the planner steps sequentially.
+     * Begins by setting the start and goal nodes.
+     * Next it runs the prm.
+     * Lastly, it runs the a_star.
+     */
     void main_plan();
 
+    /**
+     * Sets the start and goal nodes given the parameters.
+     */
     void set_points();
 
     /**
@@ -32,15 +41,19 @@ public:
      */
     void run_prm();
 
-    // Get the path from a_star
+    /**
+     * Finds the waypoints that designate a path of lowest cost.
+     */
     void run_a_star();
 
     const Node& get_start() const{
         return start;
     }
+
     const Node& get_goal() const{
         return goal;
     }
+
     float get_cost() const{
         return total_cost;
     }
@@ -48,6 +61,7 @@ public:
     const Graph& get_graph() const{
         return prm_graph;
     }
+
     /**
      * Get the waypoints object for the ROS2 Publisher.
      */

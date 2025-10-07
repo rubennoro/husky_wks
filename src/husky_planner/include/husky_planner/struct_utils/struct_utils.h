@@ -180,7 +180,7 @@ struct AStarNode{
     float f_cost;
 };
 
-/*
+/** 
  * Utils for the environment bodies to visualize in Rviz.
  */
 struct Vec {
