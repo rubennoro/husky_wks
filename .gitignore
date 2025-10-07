@@ -1,0 +1,10 @@
+# Ignore build and install directories
+/build/
+/install/
+/log/
+
+# Ignore some common ROS 2 artifacts
+*.log
+*.bak
+
+# Add any other files you want to ignore here
