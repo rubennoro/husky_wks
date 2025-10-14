@@ -13,7 +13,6 @@ using namespace std::chrono_literals;
 /**
  * This is a publisher node that runs the PRM / A* planner and produces a set of waypoints
  * that are connected and visualized via a line in Rviz2. 
- * 
  */
 class PathPlannerNode : public rclcpp::Node
 {

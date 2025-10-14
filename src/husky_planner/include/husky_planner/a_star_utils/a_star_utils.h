@@ -5,17 +5,38 @@
 
 namespace a_star_utils{
 
+    /**
+     * Manual float comparison. 
+     */
     bool AreSame(float a, float b);
 
+    /**
+     * Deriving a cost for the motion between two points.
+     */
     void cost_function(float x_1, float y_1, float z_1, float x_2, float y_2, float z_2, const Graph &prm_graph, float &cost, uint32_t &mode);
 
+    /**
+     * 3D distance between x,y,z values of two nodes.
+     */
     float distance(Node n1, Node n2);
 
+    /**
+     * 2D distance between x,y values of two nodes, where z is 0.
+     */
     float distance_2d(Node n1, Node n2);
 
+    /**
+     * TODO(): docs
+     */
     void expand_array(float x, float y, float z, float hn, const std::vector<Node> &closed, const Graph &prm_graph, std::vector<AStarNode> &exp_array);
 
+    /**
+     * TODO(): docs
+     */
     float heuristic_function(Node n1, Node n2, const Graph &prm_graph);
 
+    /**
+     * TODO(): docs
+     */
     int min_fn(const std::vector<AStarNode> &open, float goal_x, float goal_y, float goal_z);
 }

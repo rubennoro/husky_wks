@@ -15,16 +15,10 @@ namespace Map {
         return bodies;
     }
 
-    /*
-     * Start Position of the robot.
-     */
     Vec get_start_position() {
         return {Params::env.start.x, Params::env.start.y, Params::env.start.z};
     }
 
-    /*
-     * Goal position of the robot.
-     */
     Vec get_goal_position() {
         return {Params::env.goal.x, Params::env.goal.y, Params::env.goal.z};
     }

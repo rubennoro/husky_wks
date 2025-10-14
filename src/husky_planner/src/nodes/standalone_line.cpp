@@ -9,6 +9,9 @@
 
 using namespace std::chrono_literals;
 
+/**
+ * Testing a basic line publisher. 
+ */
 class SimpleMarkerNode : public rclcpp::Node
 {
 public:

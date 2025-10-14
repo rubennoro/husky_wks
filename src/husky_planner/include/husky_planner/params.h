@@ -2,6 +2,8 @@
 #include <cstdint>
 
 /*
+Given Physical Bounds:
+
 Physical properties from MATLAB:
 robot.mass = 4.4; %kg
 
@@ -102,7 +104,7 @@ namespace Params{
     } env;
 }
 /*
-ENVIRONMENT.M
+Environment Specifications:
 %% define limits
 map.limits.x_min = 0;
 map.limits.x_max = 10;

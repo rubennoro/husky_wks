@@ -132,7 +132,6 @@ namespace a_star_utils{
 
     /*
      * Pass input array exp_array by reference.
-     * This function
      */
     void expand_array(float x, float y, float z, float hn, const std::vector<Node> &closed, const Graph &prm_graph, std::vector<AStarNode> &exp_array){
         
@@ -174,8 +173,6 @@ namespace a_star_utils{
             }
         }
 
-        // printf("size from: %lu\n", edges_from_node.size());
-        // printf("size to: %lu\n", edges_to_node.size());
         /*
          * Storing edges here.
          */
@@ -208,18 +205,15 @@ namespace a_star_utils{
             // .first -> from
             // .second -> to
             Node n_node = neighbor.to;
+
             /*
              * The TO node's x,y,z coords.
              */
             float s_x, s_y, s_z;
             n_node.get_coords(s_x, s_y, s_z);
 
-            // printf("neighbor_to: %f, %f, %f\n", s_x, s_y, s_z);
-
             std::vector<Node> matching_nodes;
             for(const auto& node : closed){
-                // printf("node: %f, %f, %f\n", node.get_x(), node.get_y(), node.get_z());
-
                 if(std::fabs(node.get_x() - s_x) <= tolerance && std::fabs(node.get_y() - s_y) <= tolerance && std::fabs(node.get_z() - s_z) <= tolerance){
                     matching_nodes.push_back(node);
                 }
@@ -258,9 +252,7 @@ namespace a_star_utils{
 
     float heuristic_function(Node n1, Node n2, const Graph &prm_graph){
 
-        // Graph.grid is the prm.nodes ***
         float cost = 0;
-        // Not used? -> uint32_t mode = 0;
 
         /*
          * Get Coordinates for the start and goal coordinates
@@ -273,6 +265,7 @@ namespace a_star_utils{
 
         Node near_n1;
         Node near_n2;
+
         /*
          * Getting other nodes that are in close proximity to the current node
          */
@@ -285,10 +278,6 @@ namespace a_star_utils{
                 near_n2 = node;
             }
         }
-
-        // Unused variables
-        // int node_value1 = near_n1.get_value();
-        // int node_value2 = near_n2.get_value();
 
         float ground_dist = distance_2d(n1, n2);
         float flying_dist = std::abs(n2.get_z() - n1.get_z());
