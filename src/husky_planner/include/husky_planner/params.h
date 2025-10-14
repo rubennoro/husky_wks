@@ -52,8 +52,8 @@ namespace Params{
     } transition;
 
     struct{
-        float number_nodes{600};
-        float number_ground_nodes{300};
+        float number_nodes{1000};
+        float number_ground_nodes{500};
         float radius{4};
     } prm;
 
