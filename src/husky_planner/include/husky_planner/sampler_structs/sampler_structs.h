@@ -11,6 +11,7 @@ struct GridMap{
 struct Cell{
     uint32_t x;
     uint32_t y;
+    uint32_t z;
     uint32_t num_nodes;
     float density;
 }
