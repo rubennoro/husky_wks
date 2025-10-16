@@ -72,6 +72,7 @@ namespace Params{
             /*
              * Walls from 1 to 3 AND the platform
              */
+            const uint32_t num_blocks = 4;
             std::vector<float> x_min{1, 3, 5, 8};
             std::vector<float> x_max{2, 4, 6, 10};
             std::vector<float> y_min{0, 1, 0, 1.5};
