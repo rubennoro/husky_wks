@@ -1,9 +1,10 @@
 #pragma once
 
-#include <husky_planner/sampler_structs/grid_map.h>
-#include <husky_planner/sampler_structs/distribution.h>
-#include <husky_planner/params.h>
+#include "husky_planner/sampler_structs/grid_map.h"
+#include "husky_planner/sampler_structs/distribution.h"
+#include "husky_planner/params.h"
 #include <random>
+#include <vector>
 /*
 Steps for the Sampler:
 **THIS APPLIES TO JUST GROUND**
@@ -30,7 +31,7 @@ public:
     /** 
      * Constructor assuming parameter sizes for the grid map.
      * GridMap receives the x and y bounds for ground sampling.
-     * UniformDistribution receives the bounds for initial random sampling.  
+     * NormalDistribution receives the total number of cells for initial random sampling.
      */
     Sampler(): map(Params::env.limits.x_max, Params::env.limits.y_max){}
 
@@ -63,8 +64,21 @@ public:
      * 2. 
      */
 
+    /**
+     * TODO(): Complete this function. 
+     * Sample an (x, y) point from the GridMap. This distribution is not multivariate because
+     * the (x,y) coordinates of each cell share the same probabilities. 
+     */
+    void sample_point(float &x, float &y, float &z);
+
+    /**
+     * Carries out the process of:
+     * 
+     */
+    void sample_proc();
+
 private:
     Kernel foot;
-    UniformDistribution dist;
+    NormalDistribution dist;
     GridMap map;
 };

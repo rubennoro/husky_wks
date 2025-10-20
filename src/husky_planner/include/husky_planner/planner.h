@@ -7,6 +7,7 @@
 #include "husky_planner/struct_utils/struct_utils.h"
 #include "husky_planner/prm_utils/prm_utils.h"
 #include "husky_planner/a_star_utils/a_star_utils.h"
+#include "husky_planner/sampler.h"
 #include "husky_planner/params.h"
 
 class Planner{
@@ -24,6 +25,11 @@ public:
      * Sets the start and goal nodes given the parameters.
      */
     void set_points();
+
+    /**
+     * Initializes the sampler for the PRM.
+     */
+    void init_sampler();
 
     /**
      * Loop to sample 600 random nodes, either ground/platform/flying.
@@ -65,4 +71,6 @@ private:
     std::vector<Node> waypoints;
     
     float total_cost;
+
+    Sampler sampler;
 };

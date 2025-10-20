@@ -103,6 +103,16 @@ namespace Params{
             float z_max{2.5};
         } limits;
     } env;
+    /*
+    TODO(): Add any constant params here
+    */
+    struct{
+        /* 
+         * Must be static constexpr defined at compile-time to be used as a default param for a constructor.
+         */
+        static constexpr float res{0.1};
+    } sampling;
+    
 }
 /*
 Environment Specifications:

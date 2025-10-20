@@ -6,6 +6,8 @@
 void Planner::main_plan(){
     
     set_points();
+
+    init_sampler();
     
     run_prm();
 
@@ -17,6 +19,23 @@ void Planner::set_points(){
 
     start.set_coords(Params::env.start.x, Params::env.start.y, Params::env.start.z);    
     goal.set_coords(Params::env.goal.x, Params::env.goal.y, Params::env.goal.z);  
+
+}
+
+void Planner::init_sampler(){
+    /*
+     * TODO(): Fill this out. 
+     * Add the kernel -> Let the robot foot length / width be 0.1 / 0.1.
+     * Initialize the height parts of the gridmap. 
+     */
+
+    const float foot_width = 0.1f;
+    const float foot_length = 0.1f;
+    sampler.init_kernel(foot_width, foot_length);
+
+    sampler.init_height();
+
+
 
 }
 
@@ -39,7 +58,7 @@ void Planner::run_prm(){
 
         /**
          * Sample from randomly generated nodes within the bounds.
-         * First conditional: ground nodes  
+         * First Conditional is 10% of Platform Nodes
          */
         if(i <= std::floor(0.1 * Params::prm.number_ground_nodes) && Params::env.platform.active_platform){
             float temp_x = prm_utils::randomZeroToOne() * (Params::env.platform.x_max - Params::env.platform.x_min) + Params::env.platform.x_min;
@@ -47,14 +66,18 @@ void Planner::run_prm(){
             float temp_z = Params::env.platform.z_max;
             new_node.set_coords(temp_x, temp_y, temp_z);
         }
-        // Next 90% of Ground Nodes
+        // 90% of Ground Nodes
+        /**
+         * TODO(): IMPLEMENT THE SAMPLER FOR PROPER GROUND SAMPLINGS
+         * 
+         */
         else if(i <= Params::prm.number_ground_nodes){
             float temp_x = prm_utils::randomZeroToOne() * Params::env.limits.x_max;
             float temp_y = prm_utils::randomZeroToOne() * Params::env.limits.y_max;
             float temp_z = 0;
             new_node.set_coords(temp_x, temp_y, temp_z);
         }
-        // All other nodes, in space
+        // All other nodes, in 3D space
         else{
             float temp_x = prm_utils::randomZeroToOne() * Params::env.limits.x_max;
             float temp_y = prm_utils::randomZeroToOne() * Params::env.limits.y_max;

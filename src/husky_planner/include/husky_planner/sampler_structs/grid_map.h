@@ -162,14 +162,29 @@ struct Kernel{
 class GridMap{
 public:
 
-    GridMap(int row_size, int col_size, float res): map_(row_size, col_size, res) {}
+    GridMap(int row_size, int col_size, float res = Params::sampling.res): map_(row_size, col_size, res){
+        num_cells = static_cast<int>(static_cast<float>(row_size) / res * static_cast<float(col_size) / res);
+        
+        /*
+         * These values are accurately determining during initialization. 
+         * The num_elev_cells will increment, while num_ground_cells will decrement during Sampler::init_height();
+         */
+        num_ground_cells = num_cells;
+        num_elev_cells = 0;
+    }
 
-    Cell& operator[](int x, int y){
+    Cell& operator()(int x, int y){
         return map_(x, y);
     }
 
-    Cell& operator[](int x, int y) const{
+    const Cell& operator()(int x, int y) const{
         return map_(x, y);
+    }
+
+    Cell& index_cell(int idx) {
+        int x = idx / cols();
+        int y = idx % cols();
+        return (*this)(x, y);
     }
 
     uint32_t rows() const{
@@ -177,6 +192,33 @@ public:
     }
     uint32_t cols() const{
         return map_.cols();
+    }
+
+    void inc_elev_cells(){
+        if(num_elev_cells >= total_cells){
+            return;
+        }
+        num_elev_cells++;
+    }
+    
+    void dec_elev_cells(){
+        if(num_elev_cells <= 0){
+            return;
+        }
+        num_elev_cells--;
+    }
+
+    void inc_ground_cells(){
+        if(num_ground_cells >= total_cells){
+            return;
+        }
+        num_ground_cells++;
+    }
+    void dec_ground_cells(){
+        if(num_ground_cells <= 0){
+            return;
+        }
+        num_ground_cells--;
     }
 
     /**
@@ -205,6 +247,9 @@ public:
         delete[] map_;
     }
 private:
+    int total_cells;
+    int num_ground_cells;
+    int num_elev_cells;
     /*
      * A Matrix may be defined at compile-time, but in this case it is a run-time variable.
      */

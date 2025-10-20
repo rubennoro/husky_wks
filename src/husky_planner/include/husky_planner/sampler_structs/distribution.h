@@ -1,5 +1,5 @@
 #pragma once
-
+#include "husky_planner/sampler_structs/grid_map.h"
 #include <random>
 
 /**
@@ -16,30 +16,57 @@
  * p(x,y) = max(D(x,y)) - D(x,y) + epsilon
  * - epsilon is error
  */
-class UniformDistribution{
+class NormalDistribution{
 public:
-    /*
-     * Constructor that implements distributions with the default params.
-     */
-    UniformDistribution(){
-        const auto lims = Params::env.limits;
-        float x_var = (lims.x_max - lims.x_min) / 2;
-        float y_var = (lims.y_max - lims.y_min) / 2;
-        x_dist(x_var, x_var);
-        y_dist(y_var, y_var);
-    }
+    NormalDistribution() = default;
 
     /*
-     * Constructor that implements distributions with custom params.
+     * Constructor that implements distribution with custom params.
      */
-    UniformDistribution(float x_mean, float x_std_dev, float y_mean, float y_std_dev){
-        x_dist(x_mean, x_std_dev);
-        y_dist(y_mean, y_std_dev);
+    NormalDistribution(float cell_mean, float cell_std_dev): cell_dist(cell_mean, cell_std_dev), num_cells(0) {}
+
+    /**
+     * TODO(): Verify that this works. This makes the assumption that sampling the non-ground points doesn't matter.
+     * If it does matter, and we wan't a distribution purely for ground nodes, then we need to ONLY include ground cells.
+     * Constructor that takes the known grid map sizing params and produces a cell sampler.
+     */
+    NormalDistribution(float res, float x_size, float y_size): num_cells(0){
+        float num_cells = x_size / res * y_size / res;
+        float mean_cells = num_cells / 2;
+        /**
+         * TODO(): DETERMINE IF THIS STD DEV MAKES SENSE
+         */
+        float std_dev_cells = num_cells / 4;
+        cell_dist = std::normal_distribution<float>(mean_cells, std_dev_cells);
     }
+
+    void add_cell(Cell &c){
+        ground_cells.push_back(c);
+        num_cells++;
+    }
+
+    int get_num_cells(){
+        return num_cells;
+    }
+
+    /**
+     * Get the (x,y,z) coords of a randomly sampled cell. This is done by 
+     * first sampling a cell given the distribution, and given the bounds, sampling a point within
+     * the cell at random. 
+     */
+    void generate_sample(int &index);
+
+    /**
+     * Update the distribution to account for adaptive sampling implementation and ensure
+     * non-sampled regions get higher probabilities.
+     */
+    void update_dist();
+
 private:
     /*
-     * x and y distributions, which are independent.
+     * GridMap distribution by cell.
      */
-    std::normal_distribution<float> x_dist;
-    std::normal_distribution<float> y_dist;
+    std::normal_distribution<float> cell_dist;
+    int num_cells;
+    std::vector<Cell> ground_cells;
 };
