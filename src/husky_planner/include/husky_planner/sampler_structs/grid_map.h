@@ -5,7 +5,8 @@
  * The GridMap is formatted as a 2D Matrix of cells, with access to 
  * (x, y, z) information as well as info related to sampling, like the 
  * number_nodes that have been sampled within that specific cell, and 
- * the density, which TODO(): COMPLETE THIS.
+ * the density, which 
+ * TODO(): COMPLETE THIS.
  */
 
 
@@ -28,8 +29,8 @@ public:
                       "Default constructor only allowed for fixed-size matrices");
         res_ = resolution;
         // TODO(): Add a check here to make sure that the resolution evenly divides the rows/cols.
-        rows_ = rows / res_;
-        cols_ = cols / res_;
+        rows_ = static_cast<int>(static_cast<float>(rows) / res_);
+        cols_ = static_cast<int>(static_cast<float>(cols) / res_);
         data_ = new T[rows_ * cols_]();
     }
 
@@ -148,6 +149,7 @@ private:
  * Size of body to operate over grid for updating sampling pdf. 
  */
 struct Kernel{
+    Kernel(float x, float y): d_x(x), d_y(y){}
     uint32_t d_x;
     uint32_t d_y;
 };

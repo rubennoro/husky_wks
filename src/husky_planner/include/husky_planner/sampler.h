@@ -27,16 +27,28 @@ of each p(x,y) / total p(x,y) to get prob's per kernel
 class Sampler{
 public:
 
-    /*
+    /** 
      * Constructor assuming parameter sizes for the grid map.
+     * GridMap receives the x and y bounds for ground sampling.
+     * UniformDistribution receives the bounds for initial random sampling.  
      */
     Sampler(): map(Params::env.limits.x_max, Params::env.limits.y_max){}
 
-    /*
+    /** 
      * Constructor for custom params for the grid map.
      */
     Sampler(uint32_t x, uint32_t y): map(x, y){}
 
+    /** 
+     * Constructor for custom params for the grid map.
+     */
+    Sampler(uint32_t x, uint32_t y, float foot_w, float foot_l): map(x, y), foot(foot_w, foot_l) {}
+
+    /**
+     * Initializes kernel with sizings
+     */
+    void init_kernel(float foot_width, float foot_length);
+    
     /*
      * Initialize the height map. Given the parameters, 
      * fill the map with cells mapping to the proper heights.
@@ -52,8 +64,7 @@ public:
      */
 
 private:
-    float foot_width;
-    float foot_length;
+    Kernel foot;
     UniformDistribution dist;
     GridMap map;
 };

@@ -10,14 +10,6 @@
 #include "husky_planner/params.h"
 
 class Planner{
-private:
-    Graph prm_graph; 
-    Node start;
-    Node goal;
-    std::vector<Node> waypoints;
-    
-    float total_cost;
-
 public:
 
     /**
@@ -66,5 +58,11 @@ public:
      * Get the waypoints object for the ROS2 Publisher.
      */
     const std::vector<Node>& get_waypoints() const { return waypoints; }
-
+private:
+    Graph prm_graph; 
+    Node start;
+    Node goal;
+    std::vector<Node> waypoints;
+    
+    float total_cost;
 };

@@ -1,9 +1,17 @@
 #include "husky_planner/sampler.h"
 
 /*
+ * Initializes the kernel size for average filtering. 
+ */
+void Sampler::init_kernel(float foot_width, float foot_length){
+    foot.d_x = foot_width;
+    foot.d_y = foot_length;
+}
+
+/*
  * Relies on the parameters set to provide each cell in the grid map with a height.
  */
-Sampler::init_height(){
+void Sampler::init_height(){
 
     /*
      * Initialize the x,y bounds for each cell to specify their size.  
