@@ -1,4 +1,5 @@
 #include "husky_planner/sampler.h"
+#include <chrono>
 
 /*
  * Initializes the kernel size for average filtering. 
@@ -59,60 +60,59 @@ void Sampler::init_height(){
 
 }
 
-void Sampler::sample_point(float &x, float &y, float &z){
+void Sampler::sample_point(int &index, float &x, float &y, float &z){
 
     /*
      * Ensure that the point is on the ground. Do not exit the loop until sampling a node that
      * is not on the ground.
      */
     z = -1;
+    int index;
     while(z != 0){
         /*
         * Generate a sample index from 0 to total # of cells.
         */
-        int index;
-        dist.generate_sample(index);
-
-        /*
-        * Use the distribution's index output to index the GridMap.
-        */
-       Cell cell = map.index_cell(index);
-
-       /*
-        * TODO(): How are the cells sized?
-        * Get a random point within the cell itself.
-        */
-       std::uniform_real_distribution<float> offset_dist(0, Params::sampling.res);
-       float x = cell.x();
-       float y = cell.y();
-       float z = cell.z();
+        dist.generate_sample(index, x, y, z);
     }
+
+    /*
+     * Update the number of randomly sampled occurrences in a single cell here.
+     * This is necessary for adaptive sampling.
+     */
+    dist.add_sample_meas(index);
 
 }
 
 /*
- * TODO(): Flesh this out so I know what to build step by step. 
+ * Given the index, see if there are surrounding indices that have similar 
  */
-void Sampler::sample_proc(float &x, float &y, float &z){
+void Sampler::smooth_densities(int index){
+    dist.update_densities(index, foot);
+}
+
+void Sampler::update_probabilities(){
+    dist.update_probs();
+}
+
+void Sampler::sample_process(float &x, float &y, float &z){
     
     /*
      * 1) Sample a Point
      */
-    sample_point(x, y, z);
+    int index;
+    sample_point(index, x, y, z);
 
     /*
-     * Adaptive Sampling:
-     * - need to update the GridMap to account for the cell that was sampled from.
-     * <- can probably do the above in the previous step as 1
+     * 2) Adaptive Sampling. Update the densities of cells affected by the new sample location. 
+     * Update the maximum if necessary.
      */
-    // update_grid();
+    smooth_densities(index);
 
     /*
-     * Update the distribution.
+     * 3) Update the distribution. Loop over all the new densities and using the formula:
+     * p(x,y) = max(D(x,y)) - D(x,y) + e
+     * produce the new probabilities. Smooth them out in relation to each other.
      */
-    // update_distribution();
-
-
-
+    update_probabilities();
 
 }

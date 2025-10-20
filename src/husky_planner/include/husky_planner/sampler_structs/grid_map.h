@@ -117,8 +117,16 @@ public:
         return num_nodes_;
     }
 
+    void add_node(){
+        num_nodes_++;
+    }
+
     float density(){
         return density_;
+    }
+
+    void update_density(float updated){
+        density_ = updated;
     }
 private:
     /*
@@ -200,7 +208,7 @@ public:
         }
         num_elev_cells++;
     }
-    
+
     void dec_elev_cells(){
         if(num_elev_cells <= 0){
             return;

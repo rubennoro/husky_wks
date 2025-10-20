@@ -57,25 +57,28 @@ public:
     void init_height();
 
     /**
-     * TODO():
-     * 1. Implement Distribution Initialization. 
-     * Distribution should only exist for GROUND points.
-     * 
-     * 2. 
-     */
-
-    /**
-     * TODO(): Complete this function. 
      * Sample an (x, y) point from the GridMap. This distribution is not multivariate because
      * the (x,y) coordinates of each cell share the same probabilities. 
      */
-    void sample_point(float &x, float &y, float &z);
+    void sample_point(int &index, float &x, float &y, float &z);
+
+    /**
+     * Update the densities surrounding the sampled point.
+     */
+    void smooth_densities(int index);
+
+    /**
+     * Wrapper for distribution updating of the probabilities.
+     */
+    void update_probabilities();
 
     /**
      * Carries out the process of:
-     * 
+     * 1) Sampling
+     * 2) Updating the densities
+     * 3) Updating the probabilities and the distribution.
      */
-    void sample_proc();
+    void sample_process(float &x, float &y, float &z);
 
 private:
     Kernel foot;

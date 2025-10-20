@@ -1,48 +1,37 @@
 #pragma once
 #include "husky_planner/sampler_structs/grid_map.h"
+#include "husky_planner/params.h"
 #include <random>
 
 /**
- * TODO(): Flesh this out, outlign goals more concretely.
- * 
- * We have a group of cells on a 2D ground plane. We need to know to pick a certain 
- * cell using a distribution, which is:
- * 1) Adaptive
- *  - It constantly updates after each sampling, rebuilding the distribution.
- * 2) Once in the cell, need to choose a random (x,y) between the bounds- > this serves as the sample
- * 
- * 
- * 
  * p(x,y) = max(D(x,y)) - D(x,y) + epsilon
- * - epsilon is error
+ * Normal Distribution class carries out the main implementation maintaining the 
+ * distribution for sampling ground nodes given the formula above. 
+ * 
+ * Densities are determined as the number of times sampled for a certain cell, and
+ * are smoothed out with an average filter using a kernel size equal to that of 
+ * given robot's feet params.
+ * The probabilities for each ground cell are then updated using the formula above, and the
+ * distribution generates a random sample. 
  */
 class NormalDistribution{
 public:
     NormalDistribution() = default;
 
-    /*
-     * Constructor that implements distribution with custom params.
-     */
-    NormalDistribution(float cell_mean, float cell_std_dev): cell_dist(cell_mean, cell_std_dev), num_cells(0) {}
-
-    /**
-     * TODO(): Verify that this works. This makes the assumption that sampling the non-ground points doesn't matter.
-     * If it does matter, and we wan't a distribution purely for ground nodes, then we need to ONLY include ground cells.
-     * Constructor that takes the known grid map sizing params and produces a cell sampler.
-     */
-    NormalDistribution(float res, float x_size, float y_size): num_cells(0){
-        float num_cells = x_size / res * y_size / res;
-        float mean_cells = num_cells / 2;
-        /**
-         * TODO(): DETERMINE IF THIS STD DEV MAKES SENSE
-         */
-        float std_dev_cells = num_cells / 4;
-        cell_dist = std::normal_distribution<float>(mean_cells, std_dev_cells);
+    void add_cell(Cell &c){
+        ground_cells.push_back(&c);
+        num_cells++;
     }
 
-    void add_cell(Cell &c){
-        ground_cells.push_back(c);
-        num_cells++;
+    Cell& operator[](int index){
+        /*
+         * Out of bounds check.
+         */
+        if(index >= num_cells){
+            return *ground_cells[0];
+        }
+        
+        return *ground_cells[index];
     }
 
     int get_num_cells(){
@@ -50,11 +39,10 @@ public:
     }
 
     /**
-     * Get the (x,y,z) coords of a randomly sampled cell. This is done by 
-     * first sampling a cell given the distribution, and given the bounds, sampling a point within
-     * the cell at random. 
+     * Initializes the distribution after putting together the vector of all ground
+     * cells.
      */
-    void generate_sample(int &index);
+    void init_dist();
 
     /**
      * Update the distribution to account for adaptive sampling implementation and ensure
@@ -62,11 +50,43 @@ public:
      */
     void update_dist();
 
-private:
-    /*
-     * GridMap distribution by cell.
+    /**
+     * Get the (x,y,z) coords of a randomly sampled cell. This is done by 
+     * first sampling a cell given the distribution, and given the bounds, sampling a point within
+     * the cell at random. 
      */
-    std::normal_distribution<float> cell_dist;
+    void generate_sample(int &index, float &x, float &y, float &z);
+
+    /**
+     * Wrapper around the add node, which increments the sample used.
+     */
+    void add_sample_meas(int index);
+
+    /**
+     * Updates the densities affected by the new sampled cell. 
+     */
+    void update_densities(int index, const Kernel &k);
+    
+    /**
+     * Updates the probabilities overall to create a new distribution.
+     */
+    void update_probs();
+
+private:
+    std::discrete_distribution<int> sampler;
+
+    /*
+     * The total number of ground cells.
+     */
     int num_cells;
-    std::vector<Cell> ground_cells;
+
+    /*
+     * Stored as a pointer, cells shared with the GridMap.
+     */
+    std::vector<Cell*> ground_cells;
+
+    /*
+     * Storing the maximum density, to be updated when checked after each iteration
+     */
+    float max_density;
 };

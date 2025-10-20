@@ -34,9 +34,6 @@ void Planner::init_sampler(){
     sampler.init_kernel(foot_width, foot_length);
 
     sampler.init_height();
-
-
-
 }
 
 void Planner::run_prm(){
@@ -68,13 +65,14 @@ void Planner::run_prm(){
         }
         // 90% of Ground Nodes
         /**
-         * TODO(): IMPLEMENT THE SAMPLER FOR PROPER GROUND SAMPLINGS
-         * 
+         * Main TODO(): IMPLEMENT THE SAMPLER FOR PROPER GROUND SAMPLINGS
          */
         else if(i <= Params::prm.number_ground_nodes){
-            float temp_x = prm_utils::randomZeroToOne() * Params::env.limits.x_max;
-            float temp_y = prm_utils::randomZeroToOne() * Params::env.limits.y_max;
-            float temp_z = 0;
+            float temp_x, temp_y, temp_z;
+            sampler.sample_process(temp_x, temp_y, temp_z);
+            // float temp_x = prm_utils::randomZeroToOne() * Params::env.limits.x_max;
+            // float temp_y = prm_utils::randomZeroToOne() * Params::env.limits.y_max;
+            // float temp_z = 0;
             new_node.set_coords(temp_x, temp_y, temp_z);
         }
         // All other nodes, in 3D space
