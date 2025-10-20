@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdint>
+#include "husky_planner/params.h"
 
 /**
  * This file contains the in-house 2.5 GridMap for sampling points on the ground.
@@ -17,14 +19,14 @@ static constexpr int Dynamic = -1;
  * either at compile-time or run-time. The underlying data structure serves
  * as a 2D array with memory contiguity in 1D for simplicity. 
  */
-template<typename T, int rows = Dynamic, int cols = Dynamic, float resolution = Dynamic>
+template<typename T, int rows = Dynamic, int cols = Dynamic>
 class Matrix{
 public:
-
+    Matrix() = default;
     /**
      * Compile-time constructor for matrix.
      */
-    Matrix(){
+    Matrix(float resolution){
         static_assert(rows != Dynamic && cols != Dynamic,
                       "Default constructor only allowed for fixed-size matrices");
         res_ = resolution;
@@ -37,19 +39,19 @@ public:
     /** 
      * Run-time constructor for matrix.
      */
-    Matrix(int rows, int cols, float resolution){
+    Matrix(int num_rows, int num_cols, float resolution){
         res_ = resolution;
 
         // TODO(): Add a check here to make sure that the resolution evenly divides the rows/cols.
-        rows_ = static_cast<int>(static_cast<float>(rows) / res_);
-        cols_ = static_cast<int>(static_cast<float>(cols) / res_);
+        rows_ = static_cast<int>(static_cast<float>(num_rows) / res_);
+        cols_ = static_cast<int>(static_cast<float>(num_cols) / res_);
         data_ = new T[rows_ * cols_]();
     }
 
     /**
      * Const access override operator for 2D access.
      */
-    const T operator()(int rows, int cols){
+    const T& operator()(int x, int y) const{
         return data_[x * cols_ + y];
     }
 
@@ -60,13 +62,13 @@ public:
         return data_[x * cols_ + y];
     }
 
-    uint32_t rows(){
+    uint32_t get_rows() const{
         return rows_;
     }
-    uint32_t cols(){
+    uint32_t get_cols() const{
         return cols_;
     }
-    float res(){
+    float res() const{
         return res_;
     }
     ~Matrix(){
@@ -85,19 +87,19 @@ private:
  */
 class Cell{
 public:
-    Cell(): x_(0f), y_(0f), z_(0f), num_nodes_(0), density_(0f){} 
+    Cell(): x_(0), y_(0), z_(0), num_nodes_(0), density_(0){} 
     Cell(float x, float y, float z): x_(x), y_(y), z_(z){}
     ~Cell() = default;
 
-    float x(){
+    float x() const{
         return x_;
     }
 
-    float y(){
+    float y() const{
         return y_;
     }
 
-    float z(){
+    float z() const{
         return z_;
     }
 
@@ -113,7 +115,7 @@ public:
         z_ = z;
     }
 
-    uint32_t nodes(){
+    uint32_t nodes() const{
         return num_nodes_;
     }
 
@@ -121,7 +123,7 @@ public:
         num_nodes_++;
     }
 
-    float density(){
+    float density() const{
         return density_;
     }
 
@@ -158,8 +160,8 @@ private:
  */
 struct Kernel{
     Kernel(float x, float y): d_x(x), d_y(y){}
-    uint32_t d_x;
-    uint32_t d_y;
+    float d_x;
+    float d_y;
 };
 
 
@@ -171,13 +173,13 @@ class GridMap{
 public:
 
     GridMap(int row_size, int col_size, float res = Params::sampling.res): map_(row_size, col_size, res){
-        num_cells = static_cast<int>(static_cast<float>(row_size) / res * static_cast<float(col_size) / res);
+        total_cells = static_cast<int>(static_cast<float>(row_size) / res * static_cast<float>(col_size) / res);
         
         /*
          * These values are accurately determining during initialization. 
          * The num_elev_cells will increment, while num_ground_cells will decrement during Sampler::init_height();
          */
-        num_ground_cells = num_cells;
+        num_ground_cells = total_cells;
         num_elev_cells = 0;
     }
 
@@ -196,10 +198,10 @@ public:
     }
 
     uint32_t rows() const{
-        return map_.rows();
+        return map_.get_rows();
     }
     uint32_t cols() const{
-        return map_.cols();
+        return map_.get_cols();
     }
 
     void inc_elev_cells(){
@@ -245,14 +247,10 @@ public:
                  * These values are the mins, they go up to the res. 
                  * Height is automatically set within the constructor.
                  */
-                map_(i)(j).set_x(i * map_.res());
-                map_(i)(j).set_y(j * map_.res());
+                map_(i, j).set_x(i * map_.res());
+                map_(i, j).set_y(j * map_.res());
             }
         }
-    }
-
-    ~GridMap(){
-        delete[] map_;
     }
 private:
     int total_cells;

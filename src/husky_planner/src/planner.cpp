@@ -9,6 +9,9 @@ void Planner::main_plan(){
 
     init_sampler();
     
+    printf("Here.\n");
+    fflush(stdout);
+
     run_prm();
 
     run_a_star();

@@ -26,9 +26,10 @@ void Sampler::init_height(){
         for(uint32_t j = 0; j < map.cols(); j++){
 
             const auto x_mins = Params::env.blocks.x_min;
-            const auto x_maxs = Params::env.blocks.x_min;
+            const auto x_maxs = Params::env.blocks.x_max;
             const auto y_mins = Params::env.blocks.y_min;
             const auto y_maxs = Params::env.blocks.y_max;
+            const auto z_maxs = Params::env.blocks.z_max;
 
             /*
              * Evaluate if any of these fit the bounds, set the height to a corresponding block.
@@ -38,8 +39,8 @@ void Sampler::init_height(){
                 /*
                  * Non 0 height in the first conditional, otherwise z = 0.
                  */
-                if(map(i)(j).x() >= x_mins[k] && map(i)(j).x() <= x_maxs[k] && map(i)(j).y() >= y_mins[k] && map(i)(j).y() <= y_maxs[k]){
-                    map(i)(j).set_z(z_max[k]);
+                if(map(i, j).x() >= x_mins[k] && map(i, j).x() <= x_maxs[k] && map(i, j).y() >= y_mins[k] && map(i, j).y() <= y_maxs[k]){
+                    map(i, j).set_z(z_maxs[k]);
 
                     /*
                      * Decrease the number of ground cells from total,
@@ -52,7 +53,7 @@ void Sampler::init_height(){
                     /*
                      * Get all of the ground cells for managing the distribution.
                      */
-                    dist.add_cell(map(i)(j));
+                    dist.add_cell(map(i, j));
                 }
             }
         }
@@ -60,14 +61,13 @@ void Sampler::init_height(){
 
 }
 
-void Sampler::sample_point(int &index, float &x, float &y, float &z){
+void Sampler::sample_point(uint32_t &index, float &x, float &y, float &z){
 
     /*
      * Ensure that the point is on the ground. Do not exit the loop until sampling a node that
      * is not on the ground.
      */
     z = -1;
-    int index;
     while(z != 0){
         /*
         * Generate a sample index from 0 to total # of cells.
@@ -86,7 +86,7 @@ void Sampler::sample_point(int &index, float &x, float &y, float &z){
 /*
  * Given the index, see if there are surrounding indices that have similar 
  */
-void Sampler::smooth_densities(int index){
+void Sampler::smooth_densities(uint32_t index){
     dist.update_densities(index, foot);
 }
 
@@ -99,7 +99,7 @@ void Sampler::sample_process(float &x, float &y, float &z){
     /*
      * 1) Sample a Point
      */
-    int index;
+    uint32_t index;
     sample_point(index, x, y, z);
 
     /*

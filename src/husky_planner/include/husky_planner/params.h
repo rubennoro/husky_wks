@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 
 /*
 Given Physical Bounds:
@@ -110,7 +111,9 @@ namespace Params{
         /* 
          * Must be static constexpr defined at compile-time to be used as a default param for a constructor.
          */
-        static constexpr float res{0.1};
+        float res{0.1};
+        float kernel_x{0.2};
+        float kernel_y{0.2};
     } sampling;
     
 }

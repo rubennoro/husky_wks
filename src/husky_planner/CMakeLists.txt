@@ -22,7 +22,9 @@ set(SOURCE_FILES
   src/a_star_utils/a_star_utils.cpp
   src/environment/environment.cpp
   src/prm_utils/prm_utils.cpp
+  src/sampler_structs/distribution.cpp
   src/planner.cpp
+  src/sampler.cpp
 )
 
 add_executable(build_env_node src/nodes/build_env.cpp ${SOURCE_FILES})
@@ -31,10 +33,10 @@ ament_target_dependencies(build_env_node rclcpp std_msgs visualization_msgs)
 #  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 #  $<INSTALL_INTERFACE:include>
 #)
-add_executable(test_planner src/nodes/test_planner.cpp src/planner.cpp src/prm_utils/prm_utils.cpp src/a_star_utils/a_star_utils.cpp src/environment/environment.cpp)
+add_executable(test_planner src/nodes/test_planner.cpp src/planner.cpp src/sampler.cpp src/sampler_structs/distribution.cpp src/prm_utils/prm_utils.cpp src/a_star_utils/a_star_utils.cpp src/environment/environment.cpp)
 ament_target_dependencies(test_planner rclcpp std_msgs visualization_msgs)
 
-add_executable(path_planner src/nodes/path_planner.cpp src/planner.cpp src/prm_utils/prm_utils.cpp src/a_star_utils/a_star_utils.cpp src/environment/environment.cpp)
+add_executable(path_planner src/nodes/path_planner.cpp src/planner.cpp src/sampler.cpp src/sampler_structs/distribution.cpp src/prm_utils/prm_utils.cpp src/a_star_utils/a_star_utils.cpp src/environment/environment.cpp)
 ament_target_dependencies(path_planner rclcpp std_msgs visualization_msgs)
 
 add_executable(basic_line src/nodes/standalone_line.cpp)

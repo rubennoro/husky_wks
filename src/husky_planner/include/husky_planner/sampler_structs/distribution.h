@@ -23,18 +23,18 @@ public:
         num_cells++;
     }
 
-    Cell& operator[](int index){
+    Cell& operator[](uint32_t index){
         /*
          * Out of bounds check.
          */
         if(index >= num_cells){
             return *ground_cells[0];
         }
-        
+
         return *ground_cells[index];
     }
 
-    int get_num_cells(){
+    uint32_t get_num_cells(){
         return num_cells;
     }
 
@@ -48,24 +48,24 @@ public:
      * Update the distribution to account for adaptive sampling implementation and ensure
      * non-sampled regions get higher probabilities.
      */
-    void update_dist();
+    void update_dist(const std::vector<float> &updated_probs);
 
     /**
      * Get the (x,y,z) coords of a randomly sampled cell. This is done by 
      * first sampling a cell given the distribution, and given the bounds, sampling a point within
      * the cell at random. 
      */
-    void generate_sample(int &index, float &x, float &y, float &z);
+    void generate_sample(uint32_t &index, float &x, float &y, float &z);
 
     /**
      * Wrapper around the add node, which increments the sample used.
      */
-    void add_sample_meas(int index);
+    void add_sample_meas(uint32_t index);
 
     /**
      * Updates the densities affected by the new sampled cell. 
      */
-    void update_densities(int index, const Kernel &k);
+    void update_densities(uint32_t index, const Kernel &k);
     
     /**
      * Updates the probabilities overall to create a new distribution.
@@ -78,7 +78,7 @@ private:
     /*
      * The total number of ground cells.
      */
-    int num_cells;
+    uint32_t num_cells;
 
     /*
      * Stored as a pointer, cells shared with the GridMap.

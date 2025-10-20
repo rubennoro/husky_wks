@@ -18,7 +18,7 @@ void NormalDistribution::update_dist(const std::vector<float> &updated_probs){
     sampler = std::discrete_distribution<int>(updated_probs.begin(), updated_probs.end());
 }
 
-void NormalDisribution::generate_sample(int &index, float &x, float &y, float &z){
+void NormalDistribution::generate_sample(uint32_t &index, float &x, float &y, float &z){
 
     std::default_random_engine generator;
     std::default_random_engine rng;
@@ -27,30 +27,30 @@ void NormalDisribution::generate_sample(int &index, float &x, float &y, float &z
      * TODO(): THIS FUNCTION WORKS, BUT NEED TO UPDATE THE SAMPLER
      */
     index = sampler(generator);
-    Cell &cell = ground_cells[index];
+    Cell &cell = *ground_cells[index];
 
     /*
     * TODO(): How are the cells sized?
     * Get a random point within the cell itself.
     */
     std::uniform_real_distribution<float> offset_dist(0, Params::sampling.res);
-    float x = cell.x() + offset_dist(rng);
-    float y = cell.y() + offset_dist(rng);
-    float z = cell.z();
+    x = cell.x() + offset_dist(rng);
+    y = cell.y() + offset_dist(rng);
+    z = cell.z();
 }
 
 /**/
-void NormalDistribution::add_sample_meas(int index){
-    ground_cells[index].add_node();
+void NormalDistribution::add_sample_meas(uint32_t index){
+    ground_cells[index]->add_node();
 }
 
 /*
  * Only need to update 1 value in this case. 
  */
-void NormalDistribution::update_densities(int index, const Kernel &k){
-    float res = Params::sampling.res;
+void NormalDistribution::update_densities(uint32_t index, const Kernel &k){
+    // float res = Params::sampling.res;
     
-    Cell &cell = ground_cells[index];
+    Cell &cell = *ground_cells[index];
     float x = cell.x();
     float y = cell.y();
 
@@ -58,7 +58,7 @@ void NormalDistribution::update_densities(int index, const Kernel &k){
      * Updated densities includes the sampled cell.
      */
     for(uint32_t i = 0; i < num_cells; i++){
-        Cell &c = ground_cells[i];
+        Cell &c = *ground_cells[i];
         float c_x = c.x();
         float c_y = c.y();
 
@@ -97,7 +97,7 @@ void NormalDistribution::update_probs(){
      * 
      */
     float sum_prob = 0;
-    for(const auto& cell_ptr : ground){
+    for(const auto& cell_ptr : ground_cells){
         float p = max_density - cell_ptr->density() + eps;
         updated_probs.push_back(p);
         sum_prob += p;
@@ -110,5 +110,5 @@ void NormalDistribution::update_probs(){
     /*
      * Update the distribution.
      */
-    updated_dist(updated_probs);
+    update_dist(updated_probs);
 }

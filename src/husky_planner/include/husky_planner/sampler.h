@@ -33,12 +33,12 @@ public:
      * GridMap receives the x and y bounds for ground sampling.
      * NormalDistribution receives the total number of cells for initial random sampling.
      */
-    Sampler(): map(Params::env.limits.x_max, Params::env.limits.y_max){}
+    Sampler(): map(Params::env.limits.x_max, Params::env.limits.y_max), foot(Params::sampling.kernel_x, Params::sampling.kernel_y){}
 
     /** 
      * Constructor for custom params for the grid map.
      */
-    Sampler(uint32_t x, uint32_t y): map(x, y){}
+    Sampler(uint32_t x, uint32_t y): map(x, y), foot(Params::sampling.kernel_x, Params::sampling.kernel_y){}
 
     /** 
      * Constructor for custom params for the grid map.
@@ -60,12 +60,12 @@ public:
      * Sample an (x, y) point from the GridMap. This distribution is not multivariate because
      * the (x,y) coordinates of each cell share the same probabilities. 
      */
-    void sample_point(int &index, float &x, float &y, float &z);
+    void sample_point(uint32_t &index, float &x, float &y, float &z);
 
     /**
      * Update the densities surrounding the sampled point.
      */
-    void smooth_densities(int index);
+    void smooth_densities(uint32_t index);
 
     /**
      * Wrapper for distribution updating of the probabilities.
@@ -81,7 +81,7 @@ public:
     void sample_process(float &x, float &y, float &z);
 
 private:
+    GridMap map;
     Kernel foot;
     NormalDistribution dist;
-    GridMap map;
 };
