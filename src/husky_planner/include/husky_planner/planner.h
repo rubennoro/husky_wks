@@ -7,17 +7,10 @@
 #include "husky_planner/struct_utils/struct_utils.h"
 #include "husky_planner/prm_utils/prm_utils.h"
 #include "husky_planner/a_star_utils/a_star_utils.h"
+#include "husky_planner/sampler.h"
 #include "husky_planner/params.h"
 
 class Planner{
-private:
-    Graph prm_graph; 
-    Node start;
-    Node goal;
-    std::vector<Node> waypoints;
-    
-    float total_cost;
-
 public:
 
     /**
@@ -32,6 +25,11 @@ public:
      * Sets the start and goal nodes given the parameters.
      */
     void set_points();
+
+    /**
+     * Initializes the sampler for the PRM.
+     */
+    void init_sampler();
 
     /**
      * Loop to sample 600 random nodes, either ground/platform/flying.
@@ -66,5 +64,22 @@ public:
      * Get the waypoints object for the ROS2 Publisher.
      */
     const std::vector<Node>& get_waypoints() const { return waypoints; }
+private:
+    Graph prm_graph; 
+    Node start;
+    Node goal;
 
+    /*
+     * The waypoints of the best path.
+     */
+    std::vector<Node> waypoints;
+
+    /*
+     * All the points sampled for visualization.
+     */
+    std::vector<Node> sampled_points;
+
+    float total_cost;
+
+    Sampler sampler;
 };

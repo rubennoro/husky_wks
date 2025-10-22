@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <vector>
 
 /*
 Given Physical Bounds:
@@ -52,8 +53,8 @@ namespace Params{
     } transition;
 
     struct{
-        float number_nodes{600};
-        float number_ground_nodes{300};
+        float number_nodes{1000};
+        float number_ground_nodes{900};
         float radius{4};
     } prm;
 
@@ -72,6 +73,7 @@ namespace Params{
             /*
              * Walls from 1 to 3 AND the platform
              */
+            const uint32_t num_blocks = 4;
             std::vector<float> x_min{1, 3, 5, 8};
             std::vector<float> x_max{2, 4, 6, 10};
             std::vector<float> y_min{0, 1, 0, 1.5};
@@ -102,6 +104,18 @@ namespace Params{
             float z_max{2.5};
         } limits;
     } env;
+    /*
+    TODO(): Add any constant params here
+    */
+    struct{
+        /* 
+         * Must be static constexpr defined at compile-time to be used as a default param for a constructor.
+         */
+        float res{0.1};
+        float kernel_x{0.2};
+        float kernel_y{0.2};
+    } sampling;
+    
 }
 /*
 Environment Specifications:
