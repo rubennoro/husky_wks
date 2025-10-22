@@ -23,7 +23,7 @@ public:
         
         RCLCPP_INFO(this->get_logger(), "Before main_plan");
         planner_ = std::make_shared<Planner>();
-        RCLCPP_INFO(this->get_logger(), "Before main_plan");
+        
         planner_->main_plan();
 
         RCLCPP_INFO(this->get_logger(), "After main_plan");
@@ -37,6 +37,10 @@ public:
     }
 
 private:
+
+    /*
+     * Publishes the waypoints from the shortest path for rviz2 vis.
+     */
     void publishPathMarkers()
     {
         /*
@@ -97,7 +101,7 @@ private:
     }
 
     /*
-     * TODO(): Complete this function.
+     * Publishes all sampled points from the planner.
      */
     void publishSamplings(){
         const auto& samples = planner_->get_samplings();
