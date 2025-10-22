@@ -28,8 +28,11 @@ public:
 
         RCLCPP_INFO(this->get_logger(), "After main_plan");
         timer_ = this->create_wall_timer(
-            500ms, // Publish every 500ms
-            std::bind(&PathPlannerNode::publishPathMarkers, this)
+            500ms,
+            [this]() {
+                this->publishPathMarkers();
+                this->publishSamplings();  
+            }
         );
     }
 
@@ -91,6 +94,54 @@ private:
 
         marker_pub_->publish(marker_array);
         RCLCPP_INFO(this->get_logger(), "Published path with %zu waypoints", waypoints.size());
+    }
+
+    /*
+     * TODO(): Complete this function.
+     */
+    void publishSamplings(){
+        const auto& samples = planner_->get_samplings();
+        if (samples.empty()) {
+            RCLCPP_WARN(this->get_logger(), "No samples found to publish!");
+            return;
+        }
+        RCLCPP_INFO(this->get_logger(), "Published %zu samples", samples.size());
+
+        visualization_msgs::msg::MarkerArray marker_array;
+        int id = 0;
+        for(const auto& sample : samples){
+            float x, y, z;
+            sample.get_coords(x, y, z);
+
+            visualization_msgs::msg::Marker marker;
+            marker.header.frame_id = "map";
+            marker.header.stamp = this->now();
+            marker.ns = "sampling_points";
+            marker.id = id++;
+            marker.type = visualization_msgs::msg::Marker::SPHERE;
+            marker.action = visualization_msgs::msg::Marker::ADD;
+
+            marker.pose.position.x = x;
+            marker.pose.position.y = y;
+            marker.pose.position.z = z;
+            marker.pose.orientation.x = 0.0;
+            marker.pose.orientation.y = 0.0;
+            marker.pose.orientation.z = 0.0;
+            marker.pose.orientation.w = 1.0;
+
+            marker.scale.x = 0.1;  // Size of the sphere
+            marker.scale.y = 0.1;
+            marker.scale.z = 0.1;
+
+            // Color (customize as needed)
+            marker.color.r = 1.0;
+            marker.color.g = 0.0;
+            marker.color.b = 0.0;
+            marker.color.a = 1.0;
+
+            marker_array.markers.push_back(marker);
+        }
+        marker_pub_->publish(marker_array);
     }
 
     rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr marker_pub_;

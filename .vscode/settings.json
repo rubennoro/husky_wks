@@ -74,6 +74,7 @@
         "stack": "cpp",
         "__bit_reference": "cpp",
         "__hash_table": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "__node_handle": "cpp"
     }
 }

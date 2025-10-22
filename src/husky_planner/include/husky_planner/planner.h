@@ -64,6 +64,8 @@ public:
      * Get the waypoints object for the ROS2 Publisher.
      */
     const std::vector<Node>& get_waypoints() const { return waypoints; }
+
+    const std::vector<Node>& get_samplings() const { return sampled_points; }
 private:
     Graph prm_graph; 
     Node start;

@@ -54,7 +54,7 @@ namespace Params{
 
     struct{
         float number_nodes{1000};
-        float number_ground_nodes{900};
+        float number_ground_nodes{500};
         float radius{4};
     } prm;
 
