@@ -14,6 +14,9 @@ void Planner::main_plan(){
 
     run_prm();
 
+    printf("Here 1.\n");
+    fflush(stdout);
+
     run_a_star();
 
 }
@@ -72,10 +75,12 @@ void Planner::run_prm(){
          */
         else if(i <= Params::prm.number_ground_nodes){
             float temp_x, temp_y, temp_z;
+
+            /*
+             * Sample from the adaptive distribution.
+             */
             sampler.sample_process(temp_x, temp_y, temp_z);
-            // float temp_x = prm_utils::randomZeroToOne() * Params::env.limits.x_max;
-            // float temp_y = prm_utils::randomZeroToOne() * Params::env.limits.y_max;
-            // float temp_z = 0;
+            
             new_node.set_coords(temp_x, temp_y, temp_z);
         }
         // All other nodes, in 3D space
@@ -85,6 +90,7 @@ void Planner::run_prm(){
             float temp_z = prm_utils::randomZeroToOne() * Params::env.limits.z_max;
             new_node.set_coords(temp_x, temp_y, temp_z);
         }
+        sampled_points.push_back(new_node);
 
         if(prm_utils::obstacles_free(new_node)){
 

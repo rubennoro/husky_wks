@@ -20,9 +20,6 @@ void NormalDistribution::update_dist(const std::vector<float> &updated_probs){
 
 void NormalDistribution::generate_sample(uint32_t &index, float &x, float &y, float &z){
 
-    std::default_random_engine generator;
-    std::default_random_engine rng;
-
     /*
      * TODO(): THIS FUNCTION WORKS, BUT NEED TO UPDATE THE SAMPLER
      */
@@ -39,7 +36,6 @@ void NormalDistribution::generate_sample(uint32_t &index, float &x, float &y, fl
     z = cell.z();
 }
 
-/**/
 void NormalDistribution::add_sample_meas(uint32_t index){
     ground_cells[index]->add_node();
 }

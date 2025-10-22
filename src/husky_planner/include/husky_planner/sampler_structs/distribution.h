@@ -73,6 +73,8 @@ public:
     void update_probs();
 
 private:
+    std::default_random_engine generator;
+    std::default_random_engine rng;
     std::discrete_distribution<int> sampler;
 
     /*

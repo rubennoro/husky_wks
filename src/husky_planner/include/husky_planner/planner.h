@@ -68,8 +68,17 @@ private:
     Graph prm_graph; 
     Node start;
     Node goal;
+
+    /*
+     * The waypoints of the best path.
+     */
     std::vector<Node> waypoints;
-    
+
+    /*
+     * All the points sampled for visualization.
+     */
+    std::vector<Node> sampled_points;
+
     float total_cost;
 
     Sampler sampler;

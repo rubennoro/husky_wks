@@ -249,6 +249,7 @@ public:
                  */
                 map_(i, j).set_x(i * map_.res());
                 map_(i, j).set_y(j * map_.res());
+                map_(i, j).set_z(0);
             }
         }
     }

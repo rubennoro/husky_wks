@@ -5,6 +5,9 @@
 #include "husky_planner/params.h"
 #include <random>
 #include <vector>
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
 /*
 Steps for the Sampler:
 **THIS APPLIES TO JUST GROUND**

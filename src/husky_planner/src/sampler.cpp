@@ -73,6 +73,9 @@ void Sampler::sample_point(uint32_t &index, float &x, float &y, float &z){
         * Generate a sample index from 0 to total # of cells.
         */
         dist.generate_sample(index, x, y, z);
+        // printf("%u\n", index);
+        // printf("%f, %f, %f\n", x, y, z);
+        // fflush(stdout);
     }
 
     /*
